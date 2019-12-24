@@ -155,6 +155,6 @@ int main(array<System::String ^> ^args)
 
 
 	Console::Write(L"Press any key to exit...");
-	String^ stopper=Console::ReadLine();
+	String^ stopper = Console::ReadLine();
     return 0;
 }

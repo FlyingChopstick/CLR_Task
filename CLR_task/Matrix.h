@@ -23,6 +23,7 @@ public:
 	}
 
 
+
 	//INPUT(), handles the input
 	void Input()
 	{
@@ -32,70 +33,83 @@ public:
 		Int32 target = user_dimension * user_dimension;		
 		Boolean error = false;
 
-		//String^ number_string;
-		//Int32 length = 0;
-
 		Console::WriteLine(L"---INPUT---");
-		Console::WriteLine(L"Enter {0} elements: ", target);
 
-
-		for (i = 0; i < user_dimension; i++)
+		String^ selector = "aaa";
+		Console::Write(L"Do you want to enter from keyboard or to fill with random values? (custom/random): ");
+		while (true)
 		{
-			
-			j = 0;
-			while (j < user_dimension)
+			//catch conversion errors
+			try
 			{
-				Console::Write(L"Element #[{0},{1}]: ", i, j);
-				while (true)
-				{
-	
-					input_line = Console::ReadLine();
-					//catch conversion errors
-					try
-					{
-						element = Convert::ToDouble(input_line);
-					}
-					catch (...)
-					{
-						Console::WriteLine(L"Error reading the element, try again.");
-						//repeat input if the error was caught
-						continue;
-					}
-
-					//continue to the next element if successful
-					break;
-
-					/**
-					while (input_line[i] != 0)
-					{
-						if (input_line[i] == ' ')
-						{
-							j = i - 1;
-							while ((input_line[j] != 0) && (input_line[j] != ' '))
-							{
-								j--;
-							}
-							length = i - j;
-
-							number_string = input_line->Substring(j, length);
-							element = Convert::ToDouble(number_string);
-
-							Console::WriteLine(L"{0}", element);
-
-							number_count++;
-						}
-					}
-					/**/
-				}
-
-
-				//Console::WriteLine(L"|{0}|", j);//DEBUG
-				M_matrix[i, j] = element;
-				j++;
-				
-				
+				selector = Console::ReadLine();
 			}
-			//j = 0;
+			catch (...)
+			{
+				Console::WriteLine(L"Wrong input, try again.");
+				//repeat input if the error was caught
+				continue;
+			}
+
+			if ((selector != "custom") && (selector != "random"))
+			{
+				Console::WriteLine(L"Wrong input, try again.");
+				continue;
+			}
+
+			
+
+			//continue to the next element if successful
+			break;
+		}
+		//custom input
+		if (selector == "custom")
+		{
+			Console::WriteLine(L"Enter {0} elements: ", target);
+
+
+			for (i = 0; i < user_dimension; i++)
+			{
+
+				j = 0;
+				while (j < user_dimension)
+				{
+					Console::Write(L"Element #[{0},{1}]: ", i, j);
+					while (true)
+					{
+
+						input_line = Console::ReadLine();
+						//catch conversion errors
+						try
+						{
+							element = Convert::ToDouble(input_line);
+						}
+						catch (...)
+						{
+							Console::WriteLine(L"Error reading the element, try again.");
+							//repeat input if the error was caught
+							continue;
+						}
+						//continue to the next element if successful
+						break;
+					}
+
+					M_matrix[i, j] = element;
+					j++;
+				}
+			}
+		}
+		//========================================
+		//random input
+		if (selector == "random")
+		{
+			for (i = 0; i < user_dimension; i++)
+			{
+				for (j = 0; j < user_dimension; j++)
+				{
+					M_matrix[i, j] = rnd->Next() / 10000000 - 100;
+				}
+			}
 		}
 
 		is_created = true;
@@ -143,6 +157,8 @@ public:
 		M_greater = gcnew array<Boolean, 2>(user_dimension, user_dimension);
 	}
 
+
+
 	//PARSE_POSITIONS(), looks for values in lines greater then the main diagonal
 	void parse_positions()
 	{
@@ -158,6 +174,8 @@ public:
 			}
 		}
 	}
+
+	
 
 	//DISPLAY_GREATER(), prints element greater then the main diag
 	void const display_greater()
@@ -187,7 +205,7 @@ public:
 
 			if (found == true)
 			{
-				Console::Write(L"In the row #{0} there are {1} elements greater then the main diag: ", i, count);
+				Console::Write(L"In the row #{0} there are {1} elements greater then the main diag ({2}): ", i, count, M_matrix[i,i]);
 				for (c = 0; c < count; c++)
 				{
 					Console::Write(L"|{0}| ", greater[c]);
@@ -199,16 +217,6 @@ public:
 		}
 
 
-	}
-
-	//GET_MAX_DIM(), returns dimension ("default" - max_dimension/"user" - user_)
-	const Int32 const get_dim(const String^ mode)
-	{
-		if (mode == "default")
-			return max_dimension;
-		
-		if (mode == "user")
-			return user_dimension;		
 	}
 
 	//DISPLAY_MATRIX(), prints the matrix
@@ -228,21 +236,24 @@ public:
 		Console::WriteLine(L"----------");
 	}
 	
+
+
+	//GET_MAX_DIM(), returns dimension ("default" - max_dimension/"user" - user_)
+	const Int32 const get_dim(const String^ mode)
+	{
+		if (mode == "default")
+			return max_dimension;
+
+		if (mode == "user")
+			return user_dimension;
+	}
+
 	//GET_STATE(), returns is_created
 	const Boolean get_state()
 	{
 		return is_created;
 	}
 
-	//DEBUG
-	/**
-	void Test_1()
-	{
-		Console::WriteLine(L"{0}", this->Test_value);
-		Test_2();
-		Console::WriteLine(L"{0}", this->Test_value);
-	}
-	/**/
 private:
 	//matrix max dimension const
 	const Int32 max_dimension = 10;
@@ -258,16 +269,6 @@ private:
 
 	Boolean is_created = false;
 
-
-
-	//array<Int32>^ positions;
-
-	//DEBUG
-	/**
-	Int32 Test_value = 0;
-	void Test_2()
-	{
-		this->Test_value = 1;
-	}
-	/**/
+	//Random
+	Random^ rnd = gcnew Random;
 };

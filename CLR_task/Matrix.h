@@ -97,9 +97,11 @@ public:
 			}
 			//j = 0;
 		}
+
+		is_created = true;
 	}
 
-	//SET_DIMENSION(), sets the dimension (true - custom, false - default);
+	//SET_DIMENSION(), sets the dimension ("user" - custom, "default" - default);
 	void set_dimension(const String^ mode)
 	{
 		Int32 temp_dim = 0;
@@ -144,9 +146,7 @@ public:
 	//PARSE_POSITIONS(), looks for values in lines greater then the main diagonal
 	void parse_positions()
 	{
-		
-		
-
+		Int32 reference;
 		//Parsing the matrices
 		for (i = 0; i < user_dimension; i++)
 		{
@@ -201,18 +201,39 @@ public:
 
 	}
 
-	//GET_MAX_DIM(), returns dimension (true - max_dimension/false - user_)
+	//GET_MAX_DIM(), returns dimension ("default" - max_dimension/"user" - user_)
 	const Int32 const get_dim(const String^ mode)
 	{
-		if (mode == "max")
+		if (mode == "default")
 			return max_dimension;
 		
 		if (mode == "user")
 			return user_dimension;		
 	}
 
+	//DISPLAY_MATRIX(), prints the matrix
+	void const display_matrix()
+	{
+		Console::WriteLine(L"--MATRIX--");
+
+		for (i = 0; i < user_dimension; i++)
+		{
+			for (j = 0; j < user_dimension; j++)
+			{
+				Console::Write(L"{0} ", M_matrix[i, j]);
+			}
+			Console::WriteLine();
+		}
+
+		Console::WriteLine(L"----------");
+	}
 	
-	
+	//GET_STATE(), returns is_created
+	const Boolean get_state()
+	{
+		return is_created;
+	}
+
 	//DEBUG
 	/**
 	void Test_1()
@@ -226,14 +247,16 @@ private:
 	//matrix max dimension const
 	const Int32 max_dimension = 10;
 
+	Int32 user_dimension = -1;
+
 	//main matrix
 	array<Double, 2>^ M_matrix;
 	//matrix with the positions of the greater elements
 	array<Boolean, 2>^ M_greater;
 
-	Int32 user_dimension = -1;
-	Int32 reference;
 	Int32 i, j;
+
+	Boolean is_created = false;
 
 
 
@@ -248,4 +271,3 @@ private:
 	}
 	/**/
 };
-

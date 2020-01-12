@@ -80,7 +80,7 @@ int main(array<System::String^>^ args)
 			//Console::WriteLine(L" 1. Set custom dimension (currently {0})", matrix->user_dimension);
 		//else
 		Console::WriteLine(L" 1. Set custom dimension");
-		Console::WriteLine(L" 2. Use default dimension ({0})", matrix->get_dim("max"));
+		Console::WriteLine(L" 2. Use default dimension ({0})", matrix->get_dim("default"));
 		Console::WriteLine(L" 5. Cancel and exit");
 		//====
 		Console::WriteLine(L"Your selection: ");
@@ -171,7 +171,47 @@ int main(array<System::String^>^ args)
 		{
 		case '1':
 		{
-			matrix->Input();
+			String^ selector;
+			if (matrix->get_state() == false)
+				matrix->Input();
+			else
+			{
+				Console::WriteLine("The matrix is already created, overwrite? (yes/no): ");
+				
+				while (true)
+				{
+					//catch conversion errors
+					try
+					{
+						selector = Console::ReadLine();
+					}
+					catch (...)
+					{
+						Console::WriteLine(L"Wrong input, try again.");
+						//repeat input if the error was caught
+						continue;
+					}
+
+					if ((selector != "yes") && (selector != "no"))
+					{
+						Console::WriteLine(L"Wrong input, try again.");
+						continue;
+					}
+
+					//continue to the next element if successful
+					break;
+				}
+
+				if (selector == "yes")
+					matrix->Input();
+				else
+					break;
+
+				break;
+			}
+
+
+			
 
 
 			/**
@@ -192,15 +232,23 @@ int main(array<System::String^>^ args)
 
 		case '2':
 		{
-			matrix->parse_positions();
-			matrix->display_greater();
+			if (matrix->get_state() == true)
+			{
+				matrix->parse_positions();
+				matrix->display_greater();
+			}
+			else
+				Console::WriteLine("The matrix is not created, you need to create it first.");
 
 			break;
 		}
 
 		case '3':
 		{
-
+			if (matrix->get_state() == true)
+				matrix->display_matrix();
+			else
+				Console::WriteLine("The matrix is not created, you need to create it first.");
 
 			break;
 		}

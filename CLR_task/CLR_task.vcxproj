@@ -139,6 +139,7 @@
     <ResourceCompile Include="app.rc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Matrix.h" />
     <ClInclude Include="Functions.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
@@ -147,6 +148,7 @@
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="CLR_task.cpp" />
     <ClCompile Include="1_Input.cpp" />
+    <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="matrix_dimension.cpp" />
     <ClCompile Include="matrix_input.cpp" />
     <ClCompile Include="display_values.cpp" />

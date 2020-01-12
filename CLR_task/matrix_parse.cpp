@@ -1,7 +1,11 @@
 #include "pch.h"
+#include "Matrix.h"
 
 
 
+
+
+/**
 array<Int32>^ matrix_parse_positions(array<Double, 2>^& M_matrix, Int32 user_dimension, Int32 position)
 {
 
@@ -25,3 +29,4 @@ array<Int32>^ matrix_parse_positions(array<Double, 2>^& M_matrix, Int32 user_dim
 
 	return positions;
 }
+/**/

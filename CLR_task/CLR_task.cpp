@@ -1,14 +1,37 @@
 #include "pch.h"
 #include "Functions.h"
+#include "Matrix.h"
 
+/**
+ref class Matrix
+{
+public:
+	array<Double, 2>^ M_matrix;
+	array<Int32, 2>^ M_greater;
 
+	Int32 user_dimension = -1;
 
+	void def_greater()
+	{
+		Int32 i, j;
 
-int main(array<System::String ^> ^args)
+		for (i = 0; i < user_dimension; i++)
+		{
+			for (j = 0; j < user_dimension; j++)
+			{
+				this->M_greater[i, j] = 0;
+			}
+		}
+	}
+};
+/**/
+
+int main(array<System::String^>^ args)
 {
 	//Max matrix dimension
 	const Int32 max_dimension = 10;
 
+	//Matrix^ matrix;
 
 	Int32 i, j;
 	String^ input_line;
@@ -16,6 +39,10 @@ int main(array<System::String ^> ^args)
 	Int32 user_dimension = -1;
 	Boolean is_set = false;
 
+	//matrix.user_dimension = matrix_dimension(max_dimension);
+	//matrix.M_matrix = gcnew array<Double, 2>(max_dimension, max_dimension);
+
+	Matrix^ matrix = gcnew Matrix;
 
 	//Counter for greater elements
 	Int32 temp_count = 0;
@@ -24,28 +51,36 @@ int main(array<System::String ^> ^args)
 	Random^ rnd = gcnew Random;
 
 	//Main matrix
-	array<Double, 2>^ M_matrix = gcnew array<Double, 2>(max_dimension, max_dimension);
+	//array<Double, 2>^ M_matrix = gcnew array<Double, 2>(max_dimension, max_dimension);
 
 	//Matrix dimension (square matrix)
-	Int32 dimension = matrix_dimension(max_dimension);
+	//user_dimension = matrix_dimension(max_dimension);
 		//Console::WriteLine(L"|{0}|", dimension);//DEBUG
+
 
 	//Subarrays
 	//positions of greater elements 
-	array<Int32, 2>^ M_greater = gcnew array<Int32, 2>(dimension, dimension);
+	//array<Int32, 2>^ M_greater = gcnew array<Int32, 2>(user_dimension, user_dimension);
 	//number of greater elements
-	array<Double>^ C_array = gcnew array<Double>(dimension);
 
 
-	while (selector != '5')
+	//matrix->Test_1();
+
+	//stopper
+	/**
+	Console::Write(L"Press Enter to continue...");
+	String^ stopper = Console::ReadLine();
+	/**/
+
+	while ((selector != '1') && (selector != '2') && (selector != '5'))
 	{
 		Console::WriteLine(L"--Setting the dimensions of the matrix--");
 		//====
-		if (is_set == true)
-			Console::WriteLine(L" 1. Set custom dimension (currently {0})", user_dimension);
-		else
-			Console::WriteLine(L" 1. Set custom dimension");
-		Console::WriteLine(L" 2. Use default dimension ({0})", max_dimension);
+		//if (is_set == true)
+			//Console::WriteLine(L" 1. Set custom dimension (currently {0})", matrix->user_dimension);
+		//else
+		Console::WriteLine(L" 1. Set custom dimension");
+		Console::WriteLine(L" 2. Use default dimension ({0})", matrix->get_dim("max"));
 		Console::WriteLine(L" 5. Cancel and exit");
 		//====
 		Console::WriteLine(L"Your selection: ");
@@ -57,14 +92,30 @@ int main(array<System::String ^> ^args)
 		{
 		case '1':
 		{
-			user_dimension = matrix_dimension(max_dimension);
+			matrix->set_dimension("user");
+
+			//Int32 user_dimension = matrix_dimension(max_dimension);
+			//Console::WriteLine(L"User dimension: {0}", user_dimension);
+			/**
+			matrix->user_dimension = temp_dim;
+			matrix->M_matrix = gcnew array<Double, 2>(matrix->user_dimension, matrix->user_dimension);
+			matrix->M_greater = gcnew array<Int32, 2>(user_dimension, user_dimension);
+			matrix->def_greater();
 			is_set = true;
+			/**/
 			break;
 		}
 
 		case '2':
 		{
-			user_dimension = max_dimension;
+			matrix->set_dimension("default");
+
+			/**
+			matrix->user_dimension = max_dimension;
+			matrix->M_matrix = gcnew array<Double, 2>(matrix->user_dimension, matrix->user_dimension);
+			matrix->M_greater = gcnew array<Int32, 2>(user_dimension, user_dimension);
+			matrix->def_greater();
+			/**/
 			break;
 		}
 
@@ -75,11 +126,17 @@ int main(array<System::String ^> ^args)
 			Console::WriteLine(L"Wrong input, try again"); break;
 		}
 	}
-	
-	
+
+
+	user_dimension = matrix->get_dim("user");
+
+	//array<Double>^ C_array = gcnew array<Double>(user_dimension);
+
+	//matrix.M_greater = gcnew array<Int32, 2>(user_dimension, user_dimension);
+
 	//reset the selector
 	selector = 'a';
-	
+
 
 	while (selector != '5')
 	{
@@ -87,34 +144,64 @@ int main(array<System::String ^> ^args)
 		//====
 		Console::WriteLine(L" 1. Matrix input");
 		Console::WriteLine(L" 2. Print the values");
+		Console::WriteLine(L" 3. Matrix output");
 		Console::WriteLine(L" 5. Exit");
 		//====
 		Console::WriteLine(L"Your selection: ");
-		input_line = Console::ReadLine();
-		selector = Convert::ToChar(input_line);
 
+		while (true)
+		{
+			input_line = Console::ReadLine();
+			//catch conversion errors
+			try
+			{
+				selector = Convert::ToChar(input_line);
+			}
+			catch (...)
+			{
+				Console::WriteLine(L"Wrong input, try again.");
+				//repeat input if the error was caught
+				continue;
+			}
+			//continue to the next element if successful
+			break;
+		}
 
 		switch (selector)
 		{
 		case '1':
 		{
-			M_matrix = matrix_input(user_dimension, max_dimension);
-			for (i = 0; i < dimension; i++)
+			matrix->Input();
+
+
+			/**
+		//	matrix->M_matrix = matrix_input(matrix->user_dimension, max_dimension);
+			for (i = 0; i < user_dimension; i++)
 			{
-				for (j = 0; j < dimension; j++)
+				for (j = 0; j < user_dimension; j++)
 				{
-					M_greater[i, j] = 0;
+			//		matrix->M_greater[i, j] = 0;
 				}
 
-				C_array[i] = M_matrix[i, i];
+				//C_array[i] = matrix->M_matrix[i, i];
 			}
+			/**/
 
 			break;
 		}
 
-		case '2': 
+		case '2':
 		{
-			user_dimension = max_dimension;
+			matrix->parse_positions();
+			matrix->display_greater();
+
+			break;
+		}
+
+		case '3':
+		{
+
+
 			break;
 		}
 
@@ -124,63 +211,68 @@ int main(array<System::String ^> ^args)
 		default:
 			Console::WriteLine(L"Wrong input, try again"); break;
 		}
-
-
-
-
-		//PARSE
-		//DO NOT REMOVE UNTIL THE REWORK IS READY
-		//Parsing the matrices
-		for (i = 0; i < user_dimension; i++)
-		{
-			for (j = 0; j < dimension; j++)
-			{
-				if (M_matrix[i, j] > C_array[i])
-				{
-					temp_count++;
-					M_greater[i, j] = 1;
-				}
-			}
-			C_array[i] = temp_count;
-			temp_count = 0;
-		}
-
-
-
-
-
-		//Output menu
-		while (selector != '5')
-		{
-			Console::WriteLine(L"----MENU----");
-			Console::WriteLine(L" 1. matrix");
-			Console::WriteLine(L" 5. Exit");
-			Console::WriteLine(L"Your selection: ");
-			input_line = Console::ReadLine();
-			selector = Convert::ToChar(input_line);
-
-
-			switch (selector)
-			{
-				//First matrix
-			case '1':
-			{
-				Console::WriteLine();
-				display_values(M_matrix, M_greater, C_array, dimension);
-				Console::WriteLine();
-				break;
-			}
-
-			case '5': break;
-
-			default: Console::WriteLine(L"Wrong input, try again.");
-
-			}
-		}
-
 	}
 
-	Console::Write(L"Press Enter to exit...");
+
+
+	//PARSE
+	//DO NOT REMOVE UNTIL THE REWORK IS READY
+	/**
+	//Parsing the matrices
+	for (i = 0; i < user_dimension; i++)
+	{
+		for (j = 0; j < user_dimension; j++)
+		{
+		//	if (matrix->M_matrix[i, j] > C_array[i])
+			{
+				temp_count++;
+		//		matrix->M_greater[i, j] = 1;
+			}
+		}
+		C_array[i] = temp_count;
+		temp_count = 0;
+	}
+	/**/
+
+
+
+
+	//Output menu
+	while (selector != '5')
+	{
+		Console::WriteLine(L"----MENU----");
+		Console::WriteLine(L" 1. matrix");
+		Console::WriteLine(L" 5. Exit");
+		Console::WriteLine(L"Your selection: ");
+		input_line = Console::ReadLine();
+		selector = Convert::ToChar(input_line);
+
+
+		switch (selector)
+		{
+			//First matrix
+		case '1':
+		{
+			Console::WriteLine();
+			//	display_values(matrix->M_matrix, matrix->M_greater, C_array, user_dimension);
+			Console::WriteLine();
+			break;
+		}
+
+		case '5': break;
+
+		default: Console::WriteLine(L"Wrong input, try again.");
+
+		}
+	}
+
+
+
+
+	//stopper
+	/**
+	Console::Write(L"Press Enter to continue...");
 	String^ stopper = Console::ReadLine();
-    return 0;
+	/**/
+	return 0;
 }
